@@ -1,9 +1,6 @@
 ---
 - name: Configure as Managed Host
   hosts: all
-  become: true
-  become_method: su
-  become_user: root
 
   gather_facts: no
 
