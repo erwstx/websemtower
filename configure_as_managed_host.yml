@@ -1,0 +1,39 @@
+---
+- name: Configure as Managed Host
+  hosts: all
+  become: true
+  become_method: su
+  become_user: root
+
+  gather_facts: no
+
+  vars:
+    sshpubkey: files/id_rsa.pub
+
+  tasks:
+  - name: Ensure that user exist
+    user:
+      name: "{{ userssh }}"
+      state: present
+    register: user_result
+
+  - name: Ensure that directory exist
+    file:
+      path: "{{ user_result.home }}/.ssh"
+      state: directory
+      recurse: yes
+
+  - name: Ensure that SSH pubkey is deployed
+    authorized_key:
+      user: "{{ userssh  }}"
+      state: present
+      key: "{{ lookup('file', '{{ sshpubkey }}') }}"
+
+  - name: Ensure that sudo configuration is deployed
+    copy:
+      content: "{{ userssh }}  ALL=(ALL)	NOPASSWD: ALL"
+      dest: "/etc/sudoers.d/{{ userssh }}"
+      owner: root
+      group: root
+      mode: 0440
+
