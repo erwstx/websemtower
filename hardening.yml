@@ -1,5 +1,6 @@
 - name: Playbook for setting hardening parameters for Ansible 
   hosts: all
+  become: yes
 
   tasks: 
   - name: Configure password length requirement 
