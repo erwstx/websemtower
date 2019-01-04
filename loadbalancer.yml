@@ -32,6 +32,9 @@
       - index.html
       - index_fichiers
 
+- name: Configure Load Balancers
+  hosts: lb*
+  tasks:
   - name: Install Haproxy server
     yum:
       name: haproxy
