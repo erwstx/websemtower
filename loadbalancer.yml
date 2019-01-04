@@ -3,8 +3,11 @@
   tasks: 
   - name: Install httpd server
     yum: 
-      name: httpd 
+      name: "{{ item }}"
       state: latest
+    with_items:
+      - firewalld
+      - httpd
   
   - name: Start required services 
     service: 
