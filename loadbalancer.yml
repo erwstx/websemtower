@@ -3,11 +3,10 @@
   tasks: 
   - name: Install httpd server
     yum: 
-      name: "{{ item }}"
-      state: latest
-    with_items:
+      name:
       - firewalld
       - httpd
+      state: latest
   
   - name: Start required services 
     service: 
@@ -27,7 +26,7 @@
 
   - name: Deploy web content
     copy: 
-      src: "files/webcontent/{{ content }}/{{item}}"
+      src: "files/webcontent/{{ inventory_hostname }}/{{ item }}"
       dest: /var/www/html
     with_items: 
       - index.html
