@@ -46,7 +46,7 @@
     yum: name=firewalld state=present
 
   - name: Enable and start firewalld
-    service: name=firewalld state=enabled enabled=yes
+    service: name=firewalld state=started enabled=yes
 
   - name: Disable Transparent Huge Pages
     copy:
