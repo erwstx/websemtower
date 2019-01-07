@@ -49,9 +49,7 @@
     service: name=firewalld state=started enabled=yes
 
   - name: Disable Transparent Huge Pages
-    copy:
-      content: never
-      dest: "{{ item }}"
+    shell: echo never > "{{ item }}"
     loop:
     - /sys/kernel/mm/transparent_hugepage/enabled
     - /sys/kernel/mm/transparent_hugepage/defrag
