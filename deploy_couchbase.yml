@@ -56,7 +56,7 @@
 
   - name: Wait for Couchbase download to finish
     async_status:
-      jid: "{{ download_couchebase.ansible_job_id }}"
+      jid: "{{ download_couchbase.ansible_job_id }}"
     register: job_result
     until: job_result.finished
     retries: 30
