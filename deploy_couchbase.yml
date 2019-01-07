@@ -27,12 +27,13 @@
     when: item.mount == "/" and ( item.size_available < 9000000000 or item.fstype != "xfs" )
 
   - name: Disable swapiness
-    copy:
-      content: "0"
-      dest: /proc/sys/vm/swappiness
-      owner: root
-      group: root
-      mode: 0755
+    #copy:
+    #  content: "0"
+    #  dest: /proc/sys/vm/swappiness
+    #  owner: root
+    #  group: root
+    #  mode: 0755
+    shell: echo 0 > /proc/sys/vm/swappiness
 
   - name: Disable swapiness permanently
     blockinfile:
