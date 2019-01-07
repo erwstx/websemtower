@@ -1,0 +1,72 @@
+---
+- name: Deploy Couchbase on 1-node
+  hosts: all
+
+  tasks:
+  - name: Launch download of Couchbase 5.0.1 EE
+    get_url:
+      url: http://packages.couchbase.com/releases/5.0.1/couchbase-server-enterprise-5.0.1-centos7.x86_64.rpm
+      dest: /tmp
+    async: 3600
+    poll: 0
+    register: download_couchbase
+
+  - name: Configure Hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: Fail if memory not enough
+    fail:
+      msg: "Memory is not enough"
+    when: ansible_memory_mb.real.total < 3584 or ansible_memory_mb.real.used > 120
+
+  - name: Fail if diskspace is not enough or fstype is wrong
+    fail:
+      msg: "Diskspace is not enough or fstype is wrong"
+    loop: "{{ ansible_mounts }}"
+    when: item.mount == "/" and ( item.size_available < 9000000000 or item.fstype != "xfs" )
+
+  - name: Disable swapiness
+    copy:
+      content: "0"
+      dest: /proc/sys/vm/swappiness
+      backup: yes
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Disable swapiness permanently
+    blockinfile:
+      path: /etc/sysctl.conf
+      block: |
+        # Set swappiness to 0 to avoid swapping
+        vm.swappiness = 0
+
+  - name: Install firewalld
+    yum: name=firewalld state=present
+
+  - name: Enable and start firewalld
+    service: name=firewalld state=enabled enable=yes
+
+  - name: Disable Transparent Huge Pages
+    copy:
+      content: never
+      dest: "{{ item }}"
+    loop:
+    - /sys/kernel/mm/transparent_hugepage/enabled
+    - /sys/kernel/mm/transparent_hugepage/defrag
+
+  - name: Wait for Couchbase download to finish
+    async_status:
+      jid: "{{ download_couchebase.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
+    retries: 30
+
+  - name: Install Couchbase
+    yum: 
+      name: /tmp/couchbase-server-enterprise-5.0.1-centos7.x86_64.rpm
+      state: present
+
+  - name: Show state of couchbase-server service
+    shell: systemctl status couchbase-server
