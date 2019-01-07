@@ -18,7 +18,7 @@
   - name: Fail if memory not enough
     fail:
       msg: "Memory is not enough. ansible_memory_mb.real.total: {{ ansible_memory_mb.real.total }}. ansible_memory_mb.real.used: {{ ansible_memory_mb.real.used }}"
-    when: ansible_memory_mb.real.total < 3584 or ansible_memory_mb.real.used > 120
+    when: ansible_memory_mb.real.total < 3584 or ansible_memory_mb.real.used > 500
 
   - name: Fail if diskspace is not enough or fstype is wrong
     fail:
