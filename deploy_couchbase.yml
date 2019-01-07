@@ -30,7 +30,6 @@
     copy:
       content: "0"
       dest: /proc/sys/vm/swappiness
-      backup: yes
       owner: root
       group: root
       mode: 0755
