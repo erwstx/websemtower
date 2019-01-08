@@ -48,6 +48,13 @@
   - name: Enable and start firewalld
     service: name=firewalld state=started enabled=yes
 
+  - name: Allow 8091 TCP port 
+    firewalld:
+      port: 8091/tcp
+      state: enabled
+      permanent: yes
+      immediate: yes
+
   - name: Disable Transparent Huge Pages
     shell: echo never > "{{ item }}"
     loop:
