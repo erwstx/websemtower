@@ -1,0 +1,29 @@
+---
+- name: Clean Managed Host configuration
+  hosts: all
+
+  gather_facts: no
+
+  vars:
+    sshpubkey: files/id_rsa.pub
+
+  tasks:
+  - name: Ensure that user exist
+    user:
+      name: "{{ userssh }}"
+      state: absent
+      remove: yes
+    register: user_result
+
+  - name: Ensure that directory is not exist
+    file:
+      path: "{{ user_result.home }}"
+      state: absent
+      recurse: yes
+    when: user_result.home
+
+  - name: Ensure that sudo configuration is deleted
+    file:
+      path: "/etc/sudoers.d/{{ userssh }}"
+      state: absent
+

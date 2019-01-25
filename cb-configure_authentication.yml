@@ -1,0 +1,33 @@
+---
+- name: Getting Started with PAM Authentication
+  hosts: all
+
+  tasks:
+  - name: Install saslauthd library
+    yum: name=cyrus-sasl state=present
+
+  - name: parameter MECH=pam is uncommented
+    lineinfile:
+      path: /etc/sysconfig/saslauthd
+      regexp: "{{ item }}"
+      line: 'MECH=pam'
+    with_items:
+    - '^MECH'
+    - '^#MECH'
+    - '^# MECH'
+
+  - name: File /etc/pam.d/couchbase created
+    copy:
+      src: /etc/pam.d/passwd
+      dest: /etc/pam.d/couchbase
+      remote_src: yes
+      mode: 0755
+      owner: root
+      group: root
+
+  - name: User {{ cb_username }} is present
+    user:
+      name: "{{ cb_username }}"
+      password: "{{ cb_userpass }} | password_hash('sha512') }}"
+
+

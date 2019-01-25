@@ -1,0 +1,77 @@
+---
+- name: Deploy Couchbase on 1-node
+  hosts: all
+
+  tasks:
+  - name: Launch download of Couchbase 5.0.1 EE
+    get_url:
+      url: http://packages.couchbase.com/releases/5.0.1/couchbase-server-enterprise-5.0.1-centos7.x86_64.rpm
+      dest: /tmp
+    async: 3600
+    poll: 0
+    register: download_couchbase
+
+  - name: Configure Hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
+
+  - name: Fail if memory not enough
+    fail:
+      msg: "Memory is not enough. ansible_memory_mb.real.total: {{ ansible_memory_mb.real.total }}. ansible_memory_mb.real.used: {{ ansible_memory_mb.real.used }}"
+    when: ansible_memory_mb.real.total < 3584 or ansible_memory_mb.real.used > 1000
+
+  - name: Fail if diskspace is not enough or fstype is wrong
+    fail:
+      msg: "Diskspace is not enough or fstype is wrong"
+    loop: "{{ ansible_mounts }}"
+    when: item.mount == "/" and ( item.size_available < 9000000000 or item.fstype != "xfs" )
+
+  - name: Disable swapiness
+    #copy:
+    #  content: "0"
+    #  dest: /proc/sys/vm/swappiness
+    #  owner: root
+    #  group: root
+    #  mode: 0755
+    shell: echo 0 > /proc/sys/vm/swappiness
+
+  - name: Disable swapiness permanently
+    blockinfile:
+      path: /etc/sysctl.conf
+      block: |
+        # Set swappiness to 0 to avoid swapping
+        vm.swappiness = 0
+
+  - name: Install firewalld
+    yum: name=firewalld state=present
+
+  - name: Enable and start firewalld
+    service: name=firewalld state=started enabled=yes
+
+  - name: Allow 8091 TCP port 
+    firewalld:
+      port: 8091/tcp
+      state: enabled
+      permanent: yes
+      immediate: yes
+
+  - name: Disable Transparent Huge Pages
+    shell: echo never > "{{ item }}"
+    loop:
+    - /sys/kernel/mm/transparent_hugepage/enabled
+    - /sys/kernel/mm/transparent_hugepage/defrag
+
+  - name: Wait for Couchbase download to finish
+    async_status:
+      jid: "{{ download_couchbase.ansible_job_id }}"
+    register: job_result
+    until: job_result.finished
+    retries: 30
+
+  - name: Install Couchbase
+    yum: 
+      name: /tmp/couchbase-server-enterprise-5.0.1-centos7.x86_64.rpm
+      state: present
+
+  - name: Show state of couchbase-server service
+    shell: systemctl status couchbase-server
