@@ -1,0 +1,11 @@
+---
+# handlers file for erwstx.aide
+- name: Warning after AIDE Installation
+  debug: msg='AIDE has just be installed. Please be aware that configuration could be changed in {{ default_conf_file }} configuration file'
+
+- name: Initialization of AIDE
+  shell: '/usr/sbin/aide --init'
+
+- name: Rename initialization DB file of AIDE
+  shell: '/usr/bin/mv "{{ database_init_file }}" "{{ database_real_file }}"'
+

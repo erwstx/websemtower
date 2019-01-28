@@ -1,0 +1,12 @@
+---
+- name: Ensure that AIDE is installed
+  yum:
+    name: "{{ rpm_package }}"
+    state: present
+  notify:
+  - Warning after AIDE Installation
+  - Initialization of AIDE
+  - Rename initialization DB file of AIDE
+
+- name: Force all notified handlers to run at this point
+  meta: flush_handlers

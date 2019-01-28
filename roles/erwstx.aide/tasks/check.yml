@@ -1,0 +1,6 @@
+---
+- name: Launch an AIDE check
+  shell: /usr/sbin/aide --check
+  register: result_aide_check
+
+- debug: var=result_aide_check.stdout_lines

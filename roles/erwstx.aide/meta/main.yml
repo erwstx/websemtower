@@ -1,0 +1,14 @@
+galaxy_info:
+  author: erwstx (ep@startx.fr)
+  description: Devops Consultant
+  company: STARTX
+
+  license: BSD
+
+  min_ansible_version: 2.4
+
+  platform: rhel7
+
+  galaxy_tags: []
+
+dependencies: []

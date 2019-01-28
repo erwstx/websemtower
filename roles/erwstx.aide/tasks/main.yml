@@ -1,0 +1,5 @@
+---
+# tasks file for erwstx.aide
+- include_tasks: install.yml
+
+- include_tasks: check.yml

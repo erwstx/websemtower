@@ -1,0 +1,6 @@
+---
+# vars file for erwstx.aide
+rpm_package: aide
+database_init_file: /var/lib/aide/aide.db.new.gz
+database_real_file: /var/lib/aide/aide.db.gz
+default_conf_file: /etc/aide.conf
