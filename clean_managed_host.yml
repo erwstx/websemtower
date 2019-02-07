@@ -15,14 +15,12 @@
       remove: yes
     register: user_result
 
-  - debug: var=user_result
-
   - name: Ensure that directory is not exist
     file:
       path: "{{ user_result.home }}"
       state: absent
       recurse: yes
-    when: user_result.home
+    when: user_result.home is defined
 
   - name: Ensure that sudo configuration is deleted
     file:
