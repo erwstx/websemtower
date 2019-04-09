@@ -25,6 +25,8 @@
         region: "{{ my_region }}"
         vpc_subnet_id: "{{ my_vpc_subnet_id }}"
         assign_public_ip: yes
+        instance_tags:
+          Name: "{{ my_hostname }}"
       register: ec2
 
     - name: Add an A record for the new instance
