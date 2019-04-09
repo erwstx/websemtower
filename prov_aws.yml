@@ -67,3 +67,5 @@
         state: "stopped"
         instance_ids: "{{ ec2.instance_ids }}"
         region: "{{ my_region }}"
+      tags:
+      - stop_instance
