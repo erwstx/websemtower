@@ -62,7 +62,8 @@
       name: "{{ my_hostname }}.{{ my_dns_zone }}"
 
   - name: Use a role to set motd file
-    include_role: jtyr.motd
+    include_role:
+      name: jtyr.motd
 
 - name: Stop instances
   hosts: localhost
