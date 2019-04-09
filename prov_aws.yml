@@ -57,7 +57,9 @@
   become: True
   gather_facts: True
   roles:
-    - jtyr.motd
+    - role: jtyr.motd
+      vars:
+        motd_info__default.FQDN: "{{ my_hostname }}.{{ my_dns_zone }}"
     #- erwstx.aide
 
 - name: Stop instances
