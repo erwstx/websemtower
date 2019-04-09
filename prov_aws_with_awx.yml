@@ -97,7 +97,7 @@
       - gettext
       - ansible
       - docker
-      - nodejsr
+      - nodejs
       - npm
       - gcc-c++
       - bzip2
