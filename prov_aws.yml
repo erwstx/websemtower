@@ -56,11 +56,13 @@
   hosts: launched
   become: True
   gather_facts: True
-  roles:
-    - role: jtyr.motd
-      vars:
-        motd_info__default.FQDN: "{{ my_hostname }}.{{ my_dns_zone }}"
-    #- erwstx.aide
+  tasks:
+  - name: Set the hostname of the instance
+    hostname:
+      name: "{{ my_hostname }}.{{ my_dns_zone }}"
+
+  - name: Use a role to set motd file
+    include_role: jtyr.motd
 
 - name: Stop instances
   hosts: localhost
