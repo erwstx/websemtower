@@ -58,8 +58,10 @@
   gather_facts: True
   tasks:
   - name: Set the hostname of the instance
-    hostname:
-      name: "{{ my_hostname }}.{{ my_dns_zone }}"
+    #hostname:
+    #  name: "{{ my_hostname }}.{{ my_dns_zone }}"
+    set_fact:
+      ansible_fqdn: "{{ my_hostname }}.{{ my_dns_zone }}"
 
   - name: Use a role to set motd file
     include_role:
