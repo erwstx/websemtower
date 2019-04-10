@@ -74,7 +74,7 @@
       name: epel-release
 
 
-  - name: Désactiver le pare-feu et SELinux
+  - name: Désactiver le pare-feu
     service:
       name: firewalld
       state: stopped
