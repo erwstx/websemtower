@@ -101,11 +101,14 @@
       - npm
       - gcc-c++
       - bzip2
+      - python-pip
       state: latest
 
-  - name: Installation de la librairie Python pour Docker
-    yum:
-      name: python-docker-py
+  - name: Installation des librairies Python pour Docker
+    pip:
+      name:
+        - docker
+        - docker-compose
       state: latest
 
   - name: Démarrer et activer le service Docker
