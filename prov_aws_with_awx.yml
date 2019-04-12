@@ -69,58 +69,9 @@
     include_role:
       name: jtyr.motd
 
-  - name: Installation du repository EPEL
-    yum: 
-      name: epel-release
-
-
-  - name: Désactiver le pare-feu
-    service:
-      name: firewalld
-      state: stopped
-      enabled: no
-    ignore_errors: yes
-
-  - name: Désactiver SELinux
-    selinux:
-      state: disabled
-    ignore_errors: yes
-
-  - name: Reboot de l instance
-    reboot:
-    ignore_errors: yes
-
-  - name: Installation des paquets et dépendances nécessaires
-    yum: 
-      name:
-      - git
-      - gettext
-      - ansible
-      - docker
-      - nodejs
-      - npm
-      - gcc-c++
-      - bzip2
-      - python-pip
-      state: latest
-
-  - name: Installation des librairies Python pour Docker
-    pip:
-      name:
-        - docker
-        - docker-compose
-      state: latest
-
-  - name: Démarrer et activer le service Docker
-    service:
-      name: docker
-      state: started
-      enabled: yes
-
-  - name: Clone du dépot GIT pour l'installation de AWX
-    git:
-      repo: https://github.com/ansible/awx.git
-      dest: /tmp/awx
+  - name: Prepare to AWX installation
+    include_role:
+      name: erwstx.install_awx
 
 - name: Stop instances
   hosts: localhost
