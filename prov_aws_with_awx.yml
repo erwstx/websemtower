@@ -34,6 +34,7 @@
       ec2_eip:
         region: "{{ my_region }}"
         instance_id: "{{ my_new_instance.instance_ids }}"
+        allow_reassociation: yes
       when: elastic_ip_needed
 
     # - name: Tag the volume of the new instance
