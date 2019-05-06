@@ -36,12 +36,13 @@
         instance_id: "{{ my_new_instance.instance_ids }}"
         allow_reassociation: yes
       when: elastic_ip_needed
+      register: my_new_eip
 
     # - name: Tag the volume of the new instance
     #   ec2_tag:
     #     region: "{{ my_region }}"
     #     state: present
-    #     resource: "{{ my_new_instance.instances.block_device_mapping./dev/sda1.volume_id }}"
+    #     resource: "{{ my_new_eip. }}"
     #     tags:
     #       Name: "{{ my_hostname }}"
     #       Project: "{{ my_project }}"
