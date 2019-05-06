@@ -33,7 +33,7 @@
     - name: Add elastic IP to the new instance
       ec2_eip:
         region: "{{ my_region }}"
-        device_id: "{{ my_new_instance.instance_ids }}"
+        instance_id: "{{ my_new_instance.instance_ids }}"
       when: elastic_ip_needed
 
     # - name: Tag the volume of the new instance
