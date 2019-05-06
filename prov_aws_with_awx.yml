@@ -30,11 +30,13 @@
           Project: "{{ my_project }}"
       register: my_new_instance
 
+    - debug: var=my_new_instance.instances.block_device_mapping./dev/sda1.volume_id
+
     - name: Tag the volume of the new instance
       ec2_tag: 
         region: "{{ my_region }}"
         state: present
-        resource: "{{ my_new_instance.instances.block_device_mapping.volume_id }}"
+        resource: "{{ my_new_instance.instances.block_device_mapping./dev/sda1.volume_id }}"
         tags:
           Name: "{{ my_hostname }}"
           Project: "{{ my_project }}"
