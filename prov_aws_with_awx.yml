@@ -29,6 +29,9 @@
           Name: "{{ my_hostname }}"
       register: ec2
 
+    - debug: var=ec2
+    - debut: var=elastic_ip_needed
+
     - name: Add elastic IP to the new instance
       ec2_eip:
         device_id: "{{ item.instance_ids }}"
