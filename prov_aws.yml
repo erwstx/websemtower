@@ -2,8 +2,8 @@
 - name: Launch an instance on AWS and run Ansible roles on it
   hosts: localhost
   gather_facts: False
-  vars:
-  - vars/default_prov_aws.yml
+  vars_files:
+  - vars/defaults_prov_aws.yml
 
   tasks:
     - name: Launch instance
