@@ -60,13 +60,22 @@
       ttl: 30
       #wait: yes # No to don't wait until the changes have been replicated to all Amazon Route 53 DNS servers
     loop: "{{ my_new_instance.instances }}"
+    when: my_dns_zone is defined
 
-  - name: Add new instance to host group
+  - name: Add new instance to the on-memory Inventory
     add_host:
       hostname: "{{ item.tags.Name }}.{{ my_dns_zone | default(my_default_zone) }}"
-      groupname: launched
+      groups: launched
     loop: "{{ my_new_instance.instances }}"
+    when: my_dns_zone is defined
 
+  - name: Add new instance to the on-memory Inventory
+    add_host:
+      hostname: "{{ item.tags.Name }}"
+      groups: launched
+    loop: "{{ my_new_instance.instances }}"
+    when: my_dns_zone is not defined
+  
   - name: Wait for SSH to come up
     delegate_to: "{{ item }}"
     wait_for_connection:
@@ -77,15 +86,18 @@
 - name: Configure instance
   hosts: launched
   become: True
-  gather_facts: True
+  gather_facts: False
   tasks:
   - name: Set the hostname of the instance
     hostname:
       name: "{{ my_hostname | default(my_default_hostname) }}.{{ my_dns_zone | default(my_default_zone) }}"
 
-  - name: Set facts for the instance
-    set_fact:
-      ansible_fqdn: "{{ my_hostname | default(my_default_hostname) }}.{{ my_dns_zone | default(my_default_zone) }}"
+  - name: Gathering Facts...
+    setup:
+
+  # - name: Set facts for the instance
+  #   set_fact:
+  #     ansible_fqdn: "{{ my_hostname | default(my_default_hostname) }}.{{ my_dns_zone | default(my_default_zone) }}"
 
   - name: Deploy Ansible roles
     include_role:
