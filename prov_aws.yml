@@ -18,10 +18,15 @@
         vpc_subnet_id: "{{ my_vpc_subnet_id | default(my_default_vpc_subnet_id) }}"
         instance_tags:
           Name: "{{ my_hostname | default(my_default_hostname) }}"
-          Project: "{{ my_project | default(my_default_project) }}"
+          Project: "{{ my_project | default(my_default_project) | default(omit) }}"
         assign_public_ip: yes
         wait: true
       register: my_new_instance
+
+    - name: Do not assign an Elastic IP
+      set_fact:
+        elastic_ip_needed: default_elastic_ip_needed
+      when: elastic_ip_needed is not defined
 
     - name: Add elastic IP to the new instance
       ec2_eip:
@@ -36,8 +41,8 @@
     #     state: present
     #     resource: "{{ my_new_eip. }}"
     #     tags:
-    #       Name: "{{ my_hostname }}"
-    #       Project: "{{ my_project }}"
+    #       Name: "{{ my_hostname | default(my_default_hostname) }}"
+    #       Project: "{{ my_project | default(my_default_project) | default(omit) }}"
     #   when: elastic_ip_needed
 
     - name: Add an A record for the new instance
