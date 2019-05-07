@@ -9,6 +9,7 @@
   - install.yml
   - service.yml
   - git.yml
+  - deploy.yml
   when:
   - ansible_distribution == "CentOS"
   - ansible_distribution_version == "7.6.1810"
