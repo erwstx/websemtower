@@ -6,68 +6,73 @@
   - vars/defaults_prov_aws.yml
 
   tasks:
-    - name: Launch instance
-      ec2:
-        #aws_access_key: "{{ my_aws_access_key }}"
-        #aws_secret_key: "{{ my_aws_secret_key }}"
-        key_name: "{{ my_keypair | default(my_default_keypair) }}"
-        instance_type: "{{ my_instance_type | default(my_default_instance_type) }}"
-        group: "{{ my_security_group | default(my_default_security_group) }}"
-        image: "{{ my_image | default(my_default_image) }}"
-        region: "{{ my_region | default(my_default_region) }}"
-        vpc_subnet_id: "{{ my_vpc_subnet_id | default(my_default_vpc_subnet_id) }}"
-        instance_tags:
-          Name: "{{ my_hostname | default(my_default_hostname) }}"
-          Project: "{{ my_project | default(my_default_project) | default(omit) }}"
-        assign_public_ip: yes
-        wait: true
-      register: my_new_instance
+  - name: Set the project name
+    set_fact:
+      my_project: my_default_project
+    when: my_project == ""
 
-    - name: Do not assign an Elastic IP
-      set_fact:
-        elastic_ip_needed: default_elastic_ip_needed
-      when: elastic_ip_needed is not defined
+  - name: Launch instance
+    ec2:
+      #aws_access_key: "{{ my_aws_access_key }}"
+      #aws_secret_key: "{{ my_aws_secret_key }}"
+      key_name: "{{ my_keypair | default(my_default_keypair) }}"
+      instance_type: "{{ my_instance_type | default(my_default_instance_type) }}"
+      group: "{{ my_security_group | default(my_default_security_group) }}"
+      image: "{{ my_image | default(my_default_image) }}"
+      region: "{{ my_region | default(my_default_region) }}"
+      vpc_subnet_id: "{{ my_vpc_subnet_id | default(my_default_vpc_subnet_id) }}"
+      instance_tags:
+        Name: "{{ my_hostname | default(my_default_hostname) }}"
+        Project: "{{ my_project | default(my_default_project) | default(omit) }}"
+      assign_public_ip: yes
+      wait: true
+    register: my_new_instance
 
-    - name: Add elastic IP to the new instance
-      ec2_eip:
-        region: "{{ my_region | default(my_default_region) }}"
-        instance_id: "{{ my_new_instance.instance_ids }}"
-      when: elastic_ip_needed
-      register: my_new_eip
+  - name: Do not assign an Elastic IP
+    set_fact:
+      elastic_ip_needed: default_elastic_ip_needed
+    when: elastic_ip_needed is not defined
 
-    # - name: Tag the volume of the new instance
-    #   ec2_tag:
-    #     region: "{{ my_region }}"
-    #     state: present
-    #     resource: "{{ my_new_eip. }}"
-    #     tags:
-    #       Name: "{{ my_hostname | default(my_default_hostname) }}"
-    #       Project: "{{ my_project | default(my_default_project) | default(omit) }}"
-    #   when: elastic_ip_needed
+  - name: Add elastic IP to the new instance
+    ec2_eip:
+      region: "{{ my_region | default(my_default_region) }}"
+      instance_id: "{{ my_new_instance.instance_ids }}"
+    when: elastic_ip_needed
+    register: my_new_eip
 
-    - name: Add a DNS record (A) for the new instance
-      route53:
-        state: present
-        zone: "{{ my_dns_zone | default(my_default_zone)}}"
-        record: "{{ item.tags.Name }}.{{ my_dns_zone | default(my_default_zone) }}"
-        type: A
-        ttl: 30
-        value: "{{ item.public_ip }}"
-        wait: yes
-      loop: "{{ my_new_instance.instances }}"
+  # - name: Tag the volume of the new instance
+  #   ec2_tag:
+  #     region: "{{ my_region }}"
+  #     state: present
+  #     resource: "{{ my_new_eip. }}"
+  #     tags:
+  #       Name: "{{ my_hostname | default(my_default_hostname) }}"
+  #       Project: "{{ my_project | default(my_default_project) | default(omit) }}"
+  #   when: elastic_ip_needed
 
-    - name: Add new instance to host group
-      add_host:
-        hostname: "{{ item.tags.Name }}.{{ my_dns_zone | default(my_default_zone) }}"
-        groupname: launched
-      loop: "{{ my_new_instance.instances }}"
+  - name: Add a DNS record (A) for the new instance
+    route53:
+      state: present
+      zone: "{{ my_dns_zone | default(my_default_zone)}}"
+      record: "{{ item.tags.Name }}.{{ my_dns_zone | default(my_default_zone) }}"
+      type: A
+      ttl: 30
+      value: "{{ item.public_ip }}"
+      wait: yes
+    loop: "{{ my_new_instance.instances }}"
 
-    - name: Wait for SSH to come up
-      delegate_to: "{{ item }}"
-      wait_for_connection:
-        delay: 10
-        timeout: 320
-      loop: "{{ groups['launched'] }}"
+  - name: Add new instance to host group
+    add_host:
+      hostname: "{{ item.tags.Name }}.{{ my_dns_zone | default(my_default_zone) }}"
+      groupname: launched
+    loop: "{{ my_new_instance.instances }}"
+
+  - name: Wait for SSH to come up
+    delegate_to: "{{ item }}"
+    wait_for_connection:
+      delay: 10
+      timeout: 320
+    loop: "{{ groups['launched'] }}"
 
 - name: Configure instance
   hosts: launched
