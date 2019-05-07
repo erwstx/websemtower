@@ -71,7 +71,7 @@
 
   - name: Add new instance to the on-memory Inventory
     add_host:
-      hostname: "{{ item.tags.Name }}"
+      hostname: "{{ item.public_dns_name }}"
       groups: launched
     loop: "{{ my_new_instance.instances }}"
     when: my_dns_zone is not defined
