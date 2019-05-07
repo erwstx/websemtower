@@ -1,0 +1,5 @@
+---
+- name: Clone of the official GIT repository
+  git:
+    repo: "{{ git_repo }}"
+    dest: /tmp/awx

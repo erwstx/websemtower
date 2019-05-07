@@ -3,45 +3,12 @@
     msg: "AWX wont be deployed because the host is not running on CentOS"
   when: ansible_distribution != "CentOS"
 
-- block:
-  - name: EPEL Repository Configuration
-    yum: 
-      name: epel-release
-
-  - name: Firewalld desactivated (if installed)
-    service:
-      name: firewalld
-      state: stopped
-      enabled: no
-    ignore_errors: yes
-
-  - name: SELinux desactivated
-    selinux:
-      state: disabled
-    ignore_errors: yes
-
-  - name: Initiate reboot of the host
-    reboot:
-
-  - name: Ensure necessary packages are installed
-    yum: 
-      name: "{{ rpm_packages }}"
-      state: latest
-
-  - name: Ensure that Python librairies for Docker are installed
-    pip:
-      name: "{{ pip_packages }}"
-      state: latest
-
-  - name: Ensure that docker service is started and enabled
-    service:
-      name: docker
-      state: started
-      enabled: yes
-
-  - name: Clone of the official GIT repository
-    git:
-      repo: "{{ git_repo }}"
-      dest: /tmp/awx
-
-  when: ansible_distribution == "CentOS"
+- include_tasks: "{{ item }}"
+  loop:
+  - fw-selinux.yml
+  - install.yml
+  - service.yml
+  - git.yml
+  when:
+  - ansible_distribution == "CentOS"
+  - ansible_distribution_version == "7.6.1810"
