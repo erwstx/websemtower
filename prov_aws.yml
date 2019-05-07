@@ -45,7 +45,7 @@
     #       Project: "{{ my_project | default(my_default_project) | default(omit) }}"
     #   when: elastic_ip_needed
 
-    - name: Add an A record for the new instance
+    - name: Add a DNS record (A) for the new instance
       route53:
         state: present
         zone: "{{ my_dns_zone | default(my_default_zone)}}"
@@ -85,4 +85,4 @@
   - name: Deploy Ansible roles
     include_role:
       name: "{{ item }}"
-    loop: "{{ my_ansible_roles }}"
+    loop: "{{ my_ansible_roles | default(my_ansible_roles) }}"
