@@ -85,4 +85,5 @@
   - name: Deploy Ansible roles
     include_role:
       name: "{{ item }}"
-    loop: "{{ my_ansible_roles | default(my_default_ansible_roles) | default(omit) }}"
+    loop: "{{ my_ansible_roles | default(my_default_ansible_roles) }}"
+    when: my_ansible_roles is defined or my_default_ansible_roles is defined
