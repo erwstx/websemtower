@@ -3,6 +3,7 @@
   hosts: localhost
   gather_facts: False
   vars:
+    # For Ansible Tower or AWX, these have to be defined in surveys
     #my_aws_access_key: 
     #my_aws_secret_key:
     #my_keypair: 
@@ -11,6 +12,18 @@
     #my_image:
     #my_region:
     #my_vpc_subnet_id:
+    #my_hostname:
+    #my_dns_zone:
+    #my_project:
+    #elastic_ip_needed:
+    #my_ansible_roles:
+    motd_ascii_art: |-2
+                  _ _           _
+                 | | |         | |
+     _ __ ___  __| | |__   __ _| |_
+    | '__/ _ \/ _` | '_ \ / _` | __|
+    | | |  __/ (_| | | | | (_| | |_
+    |_|  \___|\__,_|_| |_|\__,_|\__|
 
   tasks:
     - name: Launch instance
