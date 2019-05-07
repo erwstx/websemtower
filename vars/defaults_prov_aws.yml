@@ -1,0 +1,13 @@
+---
+my_default_keypair: sx-techs
+my_default_instance_type: t2.micro
+my_default_security_group: default
+my_default_image: ami-7c1bfd1b      # ami-7c1bfd1b (RHEL7 on eu-west-2), ami-0eab3a90fc693af19 (CentOS on eu-west-2)
+my_default_region: eu-west-2        # eu-west-2 (London), eu-west-3 (Paris)
+my_default_vpc_subnet_id: subnet-5bd5cc23
+my_default_dns_zone: startx.fr  
+my_default_hostname: testerwstx1  
+my_default_project: 'Test Divers'
+default_elastic_ip_needed: False
+my_default_ansible_roles:
+- jtyr.motd
