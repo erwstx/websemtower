@@ -55,10 +55,10 @@
       state: present
       zone: "{{ my_dns_zone | default(my_default_zone)}}"
       record: "{{ item.tags.Name }}.{{ my_dns_zone | default(my_default_zone) }}"
+      value: "{{ item.public_ip }}"
       type: A
       ttl: 30
-      value: "{{ item.public_ip }}"
-      wait: yes
+      #wait: yes # No to don't wait until the changes have been replicated to all Amazon Route 53 DNS servers
     loop: "{{ my_new_instance.instances }}"
 
   - name: Add new instance to host group
