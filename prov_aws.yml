@@ -90,8 +90,8 @@
   tasks:
   - name: Execute post tasks for Linux Hosts
     include_tasks: tasks/prov_aws-post_linux.yml
-    when: ansible_facts['ansible_system'] == "Linux"
+    when: ansible_system == "Linux"
 
   - name: Execute post tasks for Windows Hosts
     include_tasks: tasks/prov_aws-post_windows.yml
-    when: ansible_facts['ansible_system'] == "Windows"
+    when: ansible_system == "Windows"
