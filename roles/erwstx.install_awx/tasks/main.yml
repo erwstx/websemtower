@@ -5,7 +5,7 @@
 
 - include_tasks: "{{ item }}"
   loop:
-  - fw-selinux.yml
+  #- fw-selinux.yml     # just to do some tests when running this role from satellite 6.5
   - install.yml
   - service.yml
   - git.yml
