@@ -3,6 +3,7 @@
   git:
     repo: "{{ git_repo }}"
     dest: "{{ git_local_dir }}"
+    version: "{{ git_repo_version }}"
 
 - name: Get AWX version available in GIT repository
   shell: "cat {{ git_local_dir }}/VERSION"
