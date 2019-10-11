@@ -13,3 +13,4 @@
 
 - name: Initiate reboot of the host
   reboot:
+  ignore_errors: yes
