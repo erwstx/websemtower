@@ -11,6 +11,18 @@
     state: disabled
   ignore_errors: yes
 
-- name: Initiate reboot of the host
-  reboot:
-  ignore_errors: yes
+# Next to come with Ansible 2.7+ ...
+#- name: Initiate reboot of the host
+#  reboot:
+
+- name: Reboot immediately 
+  shell: "sleep 5 && reboot"
+  async: 1
+  poll: 0
+
+- name: Wait for the reboot to complete
+  wait_for_connection:
+    connect_timeout: 20
+    sleep: 5
+    delay: 5
+    timeout: 300
