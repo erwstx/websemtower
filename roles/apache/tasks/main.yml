@@ -7,7 +7,7 @@
       - httpd
       - php
       - git
-      - php-mysqlnd
+    #  - php-mysqlnd
     state: present
 
 - name: Configure SELinux to allow httpd to connect to remote database
