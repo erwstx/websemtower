@@ -1,0 +1,36 @@
+- name: Ensure Application is deployed
+  hosts: all
+  force_handlers: True
+
+  roles:
+    # The "apache" role has a dependency on the "firewall" role.
+    # The "firewall" role requires a "firewall_rules" variable be defined.
+    - name: Ensure Apache is deployed
+      role: apache
+      firewall_rules:
+        # Allow http requests from the load_balancer.
+        - service: http
+      when: foreman_params.tfm_demo_role == "backend"
+
+    # The "haproxy" role has a dependency on the "firewall" role.
+    # The "firewall" role requires a "firewall_rules" variable be defined.
+    - name: Ensure HAProxy is deployed
+      role: haproxy
+      firewall_rules:
+        # Allow 80/tcp connections
+        - port: 80/tcp
+      haproxy_appservers:
+      - name: ip-172-31-27-200.eu-west-3.compute.internal
+        ip: 172.31.27.200
+        backend_port: 80
+      - name: ip-172-31-17-213.eu-west-3.compute.internal
+        ip: 172.31.17.213
+        backend_port: 80
+      when: foreman_params.tfm_demo_role == "loadbalancer"
+
+    - name: Ensure Web App is deployed
+      role: webapp
+      webapp_version: v1.0
+      when: foreman_params.tfm_demo_role == "backend"
+
+
