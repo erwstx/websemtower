@@ -4,7 +4,7 @@
   force_handlers: True
 
   pre_tasks:
-  - debug: var=hostsvars
+  - debug: var=hostvars
   - name: Gathering facts
     setup:
     when: hostvars['inventory_hostname']['foreman_params']['tfm_demo_status']
