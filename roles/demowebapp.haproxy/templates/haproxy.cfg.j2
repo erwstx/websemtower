@@ -13,7 +13,7 @@ global
     daemon
 
    #state changes due to API calls are stored in this file.
-   server-state-file /usr/local/haproxy/haproxy.state
+   #server-state-file /usr/local/haproxy/haproxy.state
 
     # turn on stats unix socket
     #  required for the ansible haproxy module.
@@ -46,7 +46,7 @@ defaults
     maxconn                     3000
 
     #Loads state changes from the state file.
-    load-server-state-from-file global
+    #load-server-state-from-file global
 
 #---------------------------------------------------------------------
 # main frontend which proxys to the backends

@@ -14,7 +14,7 @@
     # The "apache" role has a dependency on the "firewall" role.
     # The "firewall" role requires a "firewall_rules" variable be defined.
     - name: Ensure Apache is deployed
-      role: apache
+      role: demowebapp.apache
       firewall_rules:
         # Allow http requests from the load_balancer.
         - service: http
@@ -25,7 +25,7 @@
     # The "haproxy" role has a dependency on the "firewall" role.
     # The "firewall" role requires a "firewall_rules" variable be defined.
     - name: Ensure HAProxy is deployed
-      role: haproxy
+      role: demowebapp.haproxy
       firewall_rules:
         # Allow 80/tcp connections
         - port: 80/tcp
@@ -41,7 +41,7 @@
       - foreman_params.tfm_webapp_role == "loadbalancer"
 
     - name: Ensure Web App is deployed
-      role: webapp
+      role: demowebapp.webapp
       webapp_version: v1.0
       when:
       - foreman_params.tfm_webapp_demo is defined

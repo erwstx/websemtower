@@ -1,9 +1,0 @@
-# tasks file for org_common
-- name: Ensure base packages are present
-  yum:
-    name:
-      - python2-dns
-      - python3-dns
-    state: present
-
-
