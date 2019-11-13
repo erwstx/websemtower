@@ -4,10 +4,9 @@
   force_handlers: True
 
   pre_tasks:
-  - debug: var=hostvars
   - name: Gathering facts
     setup:
-    when: hostvars['inventory_hostname']['foreman_params']['tfm_demo_status']
+    when: foreman_params.tfm_demo_role
 
   roles:
     # The "apache" role has a dependency on the "firewall" role.
@@ -17,7 +16,7 @@
       firewall_rules:
         # Allow http requests from the load_balancer.
         - service: http
-      when: ansible_facts.foreman_params.tfm_demo_role == "backend"
+      when: foreman_params.tfm_demo_role == "backend"
 
     # The "haproxy" role has a dependency on the "firewall" role.
     # The "firewall" role requires a "firewall_rules" variable be defined.
