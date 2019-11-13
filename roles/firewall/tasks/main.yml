@@ -6,6 +6,12 @@
     name: firewalld
     state: present
 
+- name: Ensure firewalld is running
+    service:
+      name: firewalld
+      state: started
+      enabled: yes
+
 - name: Ensure Firewall Sources Configuration
   firewalld:
     source: "{{ item.source if item.source is defined else omit }}"
