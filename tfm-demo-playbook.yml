@@ -7,8 +7,8 @@
   - name: Gathering facts
     setup:
     when:
-    - foreman_params.tfm_demo_status is defined
-    - foreman_params.tfm_demo_status
+    - foreman_params.tfm_webapp_demo is defined
+    - foreman_params.tfm_webapp_demo
 
   roles:
     # The "apache" role has a dependency on the "firewall" role.
@@ -19,8 +19,8 @@
         # Allow http requests from the load_balancer.
         - service: http
       when:
-      - foreman_params.tfm_demo_status is defined
-      - foreman_params.tfm_demo_role == "backend"
+      - foreman_params.tfm_webapp_demo is defined
+      - foreman_params.tfm_webapp_role == "backend"
 
     # The "haproxy" role has a dependency on the "firewall" role.
     # The "firewall" role requires a "firewall_rules" variable be defined.
@@ -37,14 +37,14 @@
         ip: 172.31.17.213
         backend_port: 80
       when:
-      - foreman_params.tfm_demo_status is defined
-      - foreman_params.tfm_demo_role == "loadbalancer"
+      - foreman_params.tfm_webapp_demo is defined
+      - foreman_params.tfm_webapp_role == "loadbalancer"
 
     - name: Ensure Web App is deployed
       role: webapp
       webapp_version: v1.0
       when:
-      - foreman_params.tfm_demo_status is defined
-      - foreman_params.tfm_demo_role == "backend"
+      - foreman_params.tfm_webapp_demo is defined
+      - foreman_params.tfm_webapp_role == "backend"
 
 
