@@ -30,11 +30,11 @@
         # Allow 80/tcp connections
         - port: 80/tcp
       haproxy_appservers:
-      - name: ip-172-31-27-200.eu-west-3.compute.internal
-        ip: 172.31.27.200
+      - name: ip-172-31-30-246.eu-west-3.compute.internal
+        ip: 172.31.30.246
         backend_port: 80
-      - name: ip-172-31-17-213.eu-west-3.compute.internal
-        ip: 172.31.17.213
+      - name: ip-172-31-19-189.eu-west-3.compute.internal
+        ip: 172.31.19.189
         backend_port: 80
       when:
       - foreman_params.tfm_webapp_demo is defined
