@@ -5,7 +5,7 @@ my_default_security_group: default
 my_default_image: ami-7c1bfd1b
     # on eu-west-2: 
     # - ami-7c1bfd1b: Red Hat Enterprise Linux 7.5 (HVM), SSD Volume Type
-    # - ami-28fd4c55: Ubuntu Server 16.04 LTS (HVM) with SQL Server 2017 Standard
+    # - ami-07dc734dc14746eab: Ubuntu Server 16.04 LTS (HVM) with SQL Server 2017 Standard
     # - ami-0eab3a90fc693af19: CentOS Linux 7 x86_64 HVM EBS ENA 1901_01-b7ee8a69-ee97-4a49-9e68-afaee216db2e-ami-05713873c6794f575.4
     # - ami-08890ccc3ea1500c1: Microsoft Windows Server 2019 Base
 my_default_region: eu-west-2        # eu-west-2 (London), eu-west-3 (Paris)

@@ -1,7 +1,7 @@
 ---
 - name: Launch an instance on AWS and run Ansible roles on it
   hosts: localhost
-  gather_facts: False
+  gather_facts: false
   vars_files:
   - vars/defaults_prov_aws.yml
 
@@ -9,12 +9,15 @@
   - name: Set the project name
     set_fact:
       my_project: my_default_project
-    when: my_project == ""
+    # when: my_project == ""
+    when:
+    - my_project is not defined
+    - my_default_project is defined
 
   - name: Launch instance
     ec2:
-      #aws_access_key: "{{ my_aws_access_key }}"
-      #aws_secret_key: "{{ my_aws_secret_key }}"
+      # aws_access_key: "{{ my_aws_access_key }}"
+      # aws_secret_key: "{{ my_aws_secret_key }}"
       key_name: "{{ my_keypair | default(my_default_keypair) }}"
       instance_type: "{{ my_instance_type | default(my_default_instance_type) }}"
       group: "{{ my_security_group | default(my_default_security_group) }}"
@@ -24,7 +27,7 @@
       instance_tags:
         Name: "{{ my_hostname | default(my_default_hostname) }}"
         Project: "{{ my_project | default(my_default_project) | default(omit) }}"
-      assign_public_ip: yes
+      assign_public_ip: true
       wait: true
     register: my_new_instance
 
@@ -53,12 +56,12 @@
   - name: Add a DNS record (A) for the new instance
     route53:
       state: present
-      zone: "{{ my_dns_zone | default(my_default_zone)}}"
+      zone: "{{ my_dns_zone | default(my_default_zone) }}"
       record: "{{ item.tags.Name }}.{{ my_dns_zone | default(my_default_zone) }}"
       value: "{{ item.public_ip }}"
       type: A
       ttl: 30
-      #wait: yes # No to don't wait until the changes have been replicated to all Amazon Route 53 DNS servers
+      # wait: yes # No to don't wait until the changes have been replicated to all Amazon Route 53 DNS servers
     loop: "{{ my_new_instance.instances }}"
     when: my_dns_zone is defined
 
@@ -75,7 +78,7 @@
       groups: launched
     loop: "{{ my_new_instance.instances }}"
     when: my_dns_zone is not defined
-  
+
   - name: Wait for SSH to come up
     delegate_to: "{{ item }}"
     wait_for_connection:
@@ -85,8 +88,9 @@
 
 - name: Configure instance
   hosts: launched
-  become: True
-  gather_facts: True
+  become: true
+  gather_facts: true
+
   tasks:
   - name: Execute post tasks for Linux Hosts
     include_tasks: tasks/prov_aws-post_linux.yml

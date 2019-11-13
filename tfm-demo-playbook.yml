@@ -1,6 +1,12 @@
 - name: Ensure Application is deployed
   hosts: all
+  gather_facts: false
   force_handlers: True
+
+  pre_tasks:
+  - name: Gathering facts
+    setup:
+    when: hostvars['inventory_hostname']['foreman_params']['tfm_demo_status']
 
   roles:
     # The "apache" role has a dependency on the "firewall" role.
@@ -10,7 +16,7 @@
       firewall_rules:
         # Allow http requests from the load_balancer.
         - service: http
-      when: foreman_params.tfm_demo_role == "backend"
+      when: ansible_facts.foreman_params.tfm_demo_role == "backend"
 
     # The "haproxy" role has a dependency on the "firewall" role.
     # The "firewall" role requires a "firewall_rules" variable be defined.

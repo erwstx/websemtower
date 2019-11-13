@@ -4,8 +4,8 @@
     name: "{{ my_hostname | default(my_default_hostname) }}.{{ my_dns_zone | default(my_default_zone) }}"
   when: my_dns_zone is defined or my_default_zone is defined
 
-- name: Set the hostname of the instance                    
-  hostname:                                                 
+- name: Set the hostname of the instance
+  hostname:
     name: "{{ my_hostname | default(my_default_hostname) }}"
   when:
   - my_dns_zone is not defined
