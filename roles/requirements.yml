@@ -1,0 +1,8 @@
+- src: https://github.com/jtyr/ansible-motd.git
+  version: master
+
+- src: https://github.com/erwstx/erwstx.aide.git
+  version: master
+
+- src: https://github.com/erwstx/erwstx.install_awx.git
+  version: master
