@@ -1,4 +1,5 @@
-- src: https://github.com/jtyr/ansible-motd.git
+- name: jtyr.motd
+  src: https://github.com/jtyr/ansible-motd.git
   version: master
 
 - src: https://github.com/erwstx/erwstx.aide.git
